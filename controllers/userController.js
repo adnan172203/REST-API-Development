@@ -58,6 +58,18 @@ module.exports.loginController = async (req, res) => {
     if (!isMatched) return res.status(400).send('unable to login');
 
     //Successfully log in user
+   const token = user.generateAuthToken();
+   
+   //send as header
+  //res.header('x-auth-token', token);
+
+  res.cookie('auth', token, {
+    httpOnly: true,
+    sameSite: true,
+    signed: true,
+    maxAge: 4 * 60 * 60 * 1000
+  });
+
     res.send('Success');
   } catch (err) {
     res.status(500).send(err);

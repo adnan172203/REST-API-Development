@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cookieParser = require('cookie-parser');
 
 //db 
 const { connectDb } = require('./db/dbConnection');
@@ -10,6 +11,7 @@ const usersRoute = require('./routes/users');
 
 //middleware
 app.use(express.json());
+app.use(cookieParser('secretKey'));
 
 //connection db
 connectDb();

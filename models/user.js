@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema({
   firstName: {
@@ -28,20 +29,24 @@ const userSchema = new Schema({
       validator(value) {
         return !value.toLowerCase().includes('password');
       },
-      message:"password must not contain password"
+      message: 'password must not contain password'
     }
   }
 });
 
-userSchema.pre('save', async function(next){
-  const hashedPassword = await bcrypt.hash(this.password,10)
-  if(this.isModified('password')){
+userSchema.methods.generateAuthToken = function() {
+  const token = jwt.sign({ id: this._id }, 'secretKey', { expiresIn: '4h' });
+  return token;
+};
+
+userSchema.pre('save', async function(next) {
+  const hashedPassword = await bcrypt.hash(this.password, 10);
+  if (this.isModified('password')) {
     this.password = hashedPassword;
   }
   next();
-  
 });
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User
+module.exports = User;
