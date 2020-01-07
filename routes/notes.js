@@ -3,6 +3,9 @@ const router = express.Router();
 
 const { check } = require('express-validator');
 
+//middleware
+const {auth} = require('../middleware/auth'); 
+
 //controller
 const {
     addNoteController,
@@ -14,7 +17,7 @@ const {
 
 
 //get notes route
-router.get('/', getNotesController);
+router.get('/',auth, getNotesController);
 
 //get single note route
 router.get( '/:noteId', check('noteId', 'Note not found').isMongoId(), getNoteController );
