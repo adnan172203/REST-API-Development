@@ -7,14 +7,18 @@ const {
   addUserController,
   getUsersController,
   getUserController,
-  loginController
+  loginController,
+  logOutController
 } = require('../controllers/userController');
+
+//midleware
+const {auth} = require('../middleware/auth');
 
 //get all route
 router.get('/', getUsersController);
 
 //get single user route
-router.get('/:userId', getUserController);
+router.get('/me',auth, getUserController);
 
 
 //add new user route
@@ -43,5 +47,8 @@ router.post(
 
 //login user route
 router.post('/login', loginController);
+
+//logout user route
+router.post('/logout',auth, logOutController);
 
 module.exports = router;

@@ -17,7 +17,7 @@ module.exports.getUsersController = async (req, res) => {
 //get single  user
 
 module.exports.getUserController = async (req, res) => {
-  const id = req.params.userId;
+  const id = req.user._id;
   try {
     const user = await User.findById(id, '-password');
     if (!user) return res.status(404).send('user not exist');
@@ -75,3 +75,10 @@ module.exports.loginController = async (req, res) => {
     res.status(500).send(err);
   }
 };
+
+
+//log out user controller
+module.exports.logOutController = async(req, res) => {
+  res.clearCookie('auth');
+  res.send('log out succesfully');
+}
