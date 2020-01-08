@@ -12,7 +12,7 @@ module.exports.auth = async (req, res, next) => {
 
       //Getting user
       const user = await User.findById(decoded.id);
-
+      
       req.user = user;
 
       next();

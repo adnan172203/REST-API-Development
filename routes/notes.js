@@ -13,22 +13,24 @@ const {
     getNotesController,
     updateNoteController,
     deleteNoteController
-  } = require('../controllers/noteController');  
+  } = require('../controllers/noteController');
 
 
 //get notes route
-router.get('/',auth, getNotesController);
+router.get('/', getNotesController);
 
 //get single note route
 router.get( '/:noteId', check('noteId', 'Note not found').isMongoId(), getNoteController );
 
 //adding note
-router.post('/', addNoteController);
+router.post('/',auth, addNoteController);
 
 //update note
 router.put(
   '/:noteId',
+  
   [
+    auth,
     check('noteId', 'Note not found').isMongoId(),
     check('title', 'title is required')
       .optional()
@@ -42,7 +44,7 @@ router.put(
 
 //deleting note
 
-router.delete( '/:noteId', check('noteId', 'Note not found').isMongoId(), deleteNoteController);
+router.delete( '/:noteId',[auth, check('noteId', 'Note not found').isMongoId()], deleteNoteController);
 
 
 module.exports = router;

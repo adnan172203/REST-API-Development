@@ -6,7 +6,10 @@ const Note = require('../models/notes');
 //add note controller
 
 module.exports.addNoteController = async (req, res) => {
-  const note = new Note(req.body);
+  const note = new Note({
+    ...req.body,
+    owner:req.user._id
+  });
 
   try {
     await note.save();
@@ -25,7 +28,7 @@ module.exports.getNoteController = async (req, res) => {
   }
   try {
     const id = req.params.noteId;
-    const note = await Note.findById(id);
+    const note = await Note.findById(id).populate('owner');
     if (!note) return res.status(404).send('No Note Found!!');
     res.send(note);
   } catch (err) {
@@ -71,7 +74,10 @@ module.exports.updateNoteController = async (req, res) => {
   }
 
   try {
-    const note = await Note.findByIdAndUpdate(id, req.body, {
+    const note = await Note.findOneAndUpdate({
+      _id:id,
+      owner: req.user._id
+    },id, req.body, {
       new: true,
       runValidators: true
     });
@@ -119,7 +125,10 @@ module.exports.deleteNoteController = async (req, res) => {
   if (!errors) res.status(404).send(errors.array());
 
   try {
-    const note = await Note.findByIdAndDelete(id);
+    const note = await Note.findOneAndDelete({
+      _id:id,
+      owner: req.user._id
+    });
 
     if (!note) return res.status(404).send('Note not found');
 

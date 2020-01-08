@@ -31,11 +31,16 @@ const userSchema = new Schema({
       },
       message: 'password must not contain password'
     }
+  },
+  isAdmin:{
+    type: Boolean,
+    default:false
   }
+
 });
 
 userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign({ id: this._id }, 'secretKey', { expiresIn: '4h' });
+  const token = jwt.sign({ id: this._id, isAdmin:this.isAdmin }, 'secretKey', { expiresIn: '4h' });
   return token;
 };
 

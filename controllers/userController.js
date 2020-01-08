@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const _ = require('lodash');
 
 //models
 const User = require('../models/user');
@@ -33,7 +34,8 @@ module.exports.addUserController = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(404).send(errors.array());
   }
-  const user = new User(req.body);
+  const pickedProperty = _.pick(req.body,['firstName','lastName','email','password','confirmPassword']);
+  const user = new User(pickedProperty);
   try {
     const foundUser = await User.findOne({ email: req.body.email });
     if (foundUser) return res.status(400).send('user email exist');

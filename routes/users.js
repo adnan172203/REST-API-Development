@@ -13,9 +13,10 @@ const {
 
 //midleware
 const {auth} = require('../middleware/auth');
+const {admin} = require('../middleware/admin');
 
 //get all route
-router.get('/', getUsersController);
+router.get('/',[auth,admin], getUsersController);
 
 //get single user route
 router.get('/me',auth, getUserController);

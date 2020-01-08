@@ -14,6 +14,11 @@ const notesSchema = new Schema(
       required:true,
       minlength:2,
       maxlength:100
+    },
+    owner:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'User',
+      required:true
     }
   },
   {
